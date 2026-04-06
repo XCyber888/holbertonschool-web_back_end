@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
-""" Module docstring """
+"""Basic annotations - add"""
+
 
 def add(a: float, b: float) -> float:
-    """ Function docstring """
+    """Returns the sum of two floats"""
     return a + b
