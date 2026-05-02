@@ -2,8 +2,9 @@
 """
 Deletion-resilient hypermedia pagination
 """
+
 import csv
-from typing import List, Dict, Any
+from typing import List, Dict
 
 
 class Server:
@@ -38,30 +39,24 @@ class Server:
 
     def get_hyper_index(self, index: int = None, page_size: int = 10) -> Dict:
         """
-        Deletion-resilient hypermedia pagination
+        Returns a deletion-resilient page
         """
-        # Dataset-i indekslənmiş formada götürürük
-        focus = self.indexed_dataset()
-        
-        # Index-in doğruluğunu yoxlayırıq
-        assert index is not None and 0 <= index < len(self.dataset())
+        data = self.indexed_dataset()
 
-        data = []
+        assert isinstance(index, int) and index >= 0 and index < len(data)
+        assert isinstance(page_size, int) and page_size > 0
+
+        result = []
         current_index = index
-        
-        # Lazımi miqdarda data toplayana qədər dövr edirik
-        while len(data) < page_size and current_index < len(self.dataset()):
-            item = focus.get(current_index)
-            if item is not None:
-                data.append(item)
-            current_index += 1
 
-        # Növbəti indeks, əgər data bitibsə None olur
-        next_index = current_index if current_index < len(self.dataset()) else None
+        while len(result) < page_size:
+            if current_index in data:
+                result.append(data[current_index])
+            current_index += 1
 
         return {
             "index": index,
-            "next_index": next_index,
-            "page_size": page_size,
-            "data": data
+            "data": result,
+            "page_size": len(result),
+            "next_index": current_index
         }
