@@ -1,2 +1,5 @@
 # NoSQL - MongoDB
-Project about MongoDB and NoSQL operations.
+This folder contains tasks related to NoSQL and MongoDB.
+
+## Tasks
+0. List all databases
