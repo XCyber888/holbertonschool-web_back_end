@@ -1,6 +1,5 @@
-# NoSQL - MongoDB
-This folder contains tasks related to NoSQL and MongoDB.
+# NoSQL
+This project contains tasks for learning NoSQL databases, specifically MongoDB.
 
 ## Tasks
 0. List all databases
-1. Create a database
