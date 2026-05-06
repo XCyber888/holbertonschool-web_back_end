@@ -9,3 +9,4 @@
 6. Take advantage of template literals
 7. Object property value shorthand syntax
 8. No need to create empty objects before adding in properties
+9. ES6 method properties
