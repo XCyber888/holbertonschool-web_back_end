@@ -7,3 +7,4 @@
 4. All matches
 5. Count
 6. Update
+7. Delete by match
