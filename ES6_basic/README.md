@@ -7,3 +7,4 @@
 4. Rest parameter syntax for functions
 5. The wonders of spread syntax
 6. Take advantage of template literals
+7. Object property value shorthand syntax
