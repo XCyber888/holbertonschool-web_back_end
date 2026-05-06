@@ -11,3 +11,4 @@
 8. No need to create empty objects before adding in properties
 9. ES6 method properties
 10. For...of Loops
+11. Iterator
