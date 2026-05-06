@@ -12,3 +12,4 @@
 9. ES6 method properties
 10. For...of Loops
 11. Iterator
+12. Let's create a report object
