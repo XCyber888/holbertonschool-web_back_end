@@ -6,3 +6,4 @@
 3. All documents
 4. All matches
 5. Count
+6. Update
