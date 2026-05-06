@@ -8,3 +8,4 @@
 5. The wonders of spread syntax
 6. Take advantage of template literals
 7. Object property value shorthand syntax
+8. No need to create empty objects before adding in properties
