@@ -6,3 +6,4 @@
 3. Parameter defaults
 4. Rest parameter syntax for functions
 5. The wonders of spread syntax
+6. Take advantage of template literals
