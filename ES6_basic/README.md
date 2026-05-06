@@ -4,3 +4,4 @@
 1. Block Scope
 2. Arrow functions
 3. Parameter defaults
+4. Rest parameter syntax for functions
