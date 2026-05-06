@@ -10,3 +10,4 @@
 7. Delete by match
 7. Delete by match
 8. List all documents in Python
+9. Insert a document in Python
