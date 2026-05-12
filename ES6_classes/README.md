@@ -5,3 +5,4 @@ ES6 Classes
 3. Methods, static methods, computed methods names..... MONEY
 4. Pricing
 5. A Building
+7. Airport
