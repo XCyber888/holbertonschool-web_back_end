@@ -1,10 +1,11 @@
-export default function updateUniqueItems(map) {
+export default function updateUniqueItems(items) {
+  if (Object.getPrototypeOf(items) !== Map.prototype) {
     throw new Error('Cannot process');
   }
-  for (const [key, value] of map) {
+  items.forEach((value, key) => {
     if (value === 1) {
-      map.set(key, 100);
+      items.set(key, 100);
     }
-  }
-  return map;
+  });
+  return items;
 }
