@@ -8,3 +8,4 @@ ES6 Classes
 7. Airport
 8. Primitive - Holberton Class
 6. Inheritance
+9. Hoisting
