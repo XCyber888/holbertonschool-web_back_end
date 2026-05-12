@@ -9,3 +9,4 @@ ES6 Classes
 8. Primitive - Holberton Class
 6. Inheritance
 9. Hoisting
+10. Vroom
