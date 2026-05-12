@@ -7,3 +7,4 @@ ES6 Classes
 5. A Building
 7. Airport
 8. Primitive - Holberton Class
+6. Inheritance
