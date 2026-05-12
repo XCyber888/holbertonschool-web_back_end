@@ -3,3 +3,4 @@ ES6 Data Manipulation
 1. More mapping
 2. Filter
 3. Reduce
+4. Combine
