@@ -6,3 +6,4 @@ ES6 Classes
 4. Pricing
 5. A Building
 7. Airport
+8. Primitive - Holberton Class
