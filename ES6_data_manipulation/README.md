@@ -9,3 +9,4 @@ ES6 Data Manipulation
 7. More set data structure
 8. Clean set
 9. Map data structure
+10. More map data structure
