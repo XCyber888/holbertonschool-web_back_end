@@ -6,3 +6,4 @@ ES6 Data Manipulation
 4. Combine
 5. Typed Arrays
 6. Set data structure
+7. More set data structure
