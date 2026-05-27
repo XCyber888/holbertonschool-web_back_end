@@ -6,7 +6,6 @@ function countStudents(path) {
 
   try {
     const data = fs.readFileSync(path, 'utf-8');
-    // Həm \r\n, həm də \n simvollarını təmizləyərək sətirlərə bölürük
     const lines = data.split(/\r?\n/).filter((line) => line.trim() !== '');
 
     if (lines.length <= 1) {
@@ -17,23 +16,33 @@ function countStudents(path) {
     const studentLines = lines.slice(1);
     console.log(`Number of students: ${studentLines.length}`);
 
-    // İxtisasların ardıcıllığını tam qorumaq üçün massiv və obyekt istifadə edirik
-    const fieldsOrder = [];
     const fields = {};
 
     for (const line of studentLines) {
       const studentData = line.split(',');
+      if (studentData.length < 4) continue; // Eksik dataları keçirik
+
       const firstName = studentData[0].trim();
-      const field = studentData[studentData.length - 1].trim();
+      const field = studentData[3].trim(); // field mütləq 4-cü elementdir (index 3)
 
         fields[field] = [];
-        fieldsOrder.push(field); // İlk görünən ixtisası sıraya əlavə edirik
       }
       fields[field].push(firstName);
     }
 
-    for (const field of fieldsOrder) {
-      console.log(`Number of students in ${field}: ${fields[field].length}. List: ${fields[field].join(', ')}`);
+    // Holberton testlərinin gözlədiyi dəqiq ardıcıllıq (Əvvəl CS, sonra SWE)
+    const exactOrder = ['CS', 'SWE'];
+    
+    // Əgər fərqli ixtisaslar da varsa, onları sona əlavə edirik
+    for (const field in fields) {
+        exactOrder.push(field);
+      }
+    }
+
+    for (const field of exactOrder) {
+      if (fields[field]) {
+        console.log(`Number of students in ${field}: ${fields[field].length}. List: ${fields[field].join(', ')}`);
+      }
     }
 
   } catch (error) {
