@@ -2,51 +2,41 @@ const express = require('express');
 const fs = require('fs');
 
 const app = express();
-const PORT = 1245;
+const port = 1245;
+const dbPath = process.argv[2];
 
-function countStudents(path) {
-  return new Promise((resolve, reject) => {
-    fs.readFile(path, 'utf8', (err, data) => {
-      if (err) return reject(Error('Cannot load the database'));
+function parseStudents(path) {
+    return 'Cannot load the database';
+  }
+  const content = fs.readFileSync(path, 'utf8').trim();
 
-      const lines = data.split('\n').filter((l) => l.trim() !== '');
-      const fields = {};
+  const lines = content.split('\n').filter((line) => line.length > 0);
+  const students = lines.slice(1);
+  let output = `Number of students: ${students.length}`;
 
-      for (let i = 1; i < lines.length; i++) {
-        const parts = lines[i].split(',');
-        const field = parts[3];
-        const firstname = parts[0];
+  const fields = {};
+  for (const student of students) {
+    const data = student.split(',');
+    const firstName = data[0];
+    const field = data[3];
+    fields[field].push(firstName);
+  }
 
-        fields[field].push(firstname);
-      }
-
-      let output = `Number of students: ${lines.length - 1}`;
-      for (const field of Object.keys(fields).sort()) {
-        output += `\nNumber of students in ${field}: ${fields[field].length}. List: ${fields[field].join(', ')}`;
-      }
-
-      resolve(output);
-    });
-  });
+  for (const [field, list] of Object.entries(fields)) {
+    output += `\nNumber of students in ${field}: ${list.length}. List: ${list.join(', ')}`;
+  }
+  return output;
 }
 
 app.get('/', (req, res) => {
   res.send('Hello Holberton School!');
 });
 
-app.get('/students', async (req, res) => {
-  const db = process.argv[2];
-  res.set('Content-Type', 'text/plain');
-  
-  let responseText = 'This is the list of our students\n';
-  try {
-    const data = await countStudents(db);
-    res.send(`${responseText}${data}`);
-  } catch (err) {
-    res.send(`${responseText}${err.message}`);
-  }
+app.get('/students', (req, res) => {
+  const baseText = 'This is the list of our students\n';
+  const studentData = parseStudents(dbPath);
+  res.send(`${baseText}${studentData}`);
 });
 
-app.listen(PORT);
-
+app.listen(port);
 module.exports = app;
