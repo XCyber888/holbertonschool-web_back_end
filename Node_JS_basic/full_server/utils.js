@@ -7,6 +7,7 @@ export function readDatabase(path) {
         reject(new Error('Cannot load the database'));
         return;
       }
+      
       const lines = data.split('\n').filter((line) => line.trim() !== '');
       const students = lines.slice(1);
       const fields = {};

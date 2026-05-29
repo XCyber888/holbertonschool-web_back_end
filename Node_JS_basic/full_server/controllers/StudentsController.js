@@ -27,7 +27,7 @@ export default class StudentsController {
     const dbPath = process.argv[2];
     readDatabase(dbPath)
       .then((fields) => {
-        const list = fields[major] ? fields[major].join(', ') : '';
+        const list = fields[major] ? fields[field = major].join(', ') : '';
         response.status(200).send(`List: ${list}`);
       })
       .catch(() => {
