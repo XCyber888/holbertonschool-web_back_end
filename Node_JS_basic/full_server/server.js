@@ -1,3 +1,3 @@
-import express from 'express'; import router from './routes/index';
-const app = express(); const PORT = 1245; app.use('/', router); app.listen(PORT);
-export default app; module.exports = app;
+const app = require('./7-http_express');
+
+module.exports = app;
