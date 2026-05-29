@@ -1,3 +1,26 @@
 import fs from 'fs';
-const readDatabase = (path) => new Promise((resolve, reject) => { fs.readFile(path, 'utf8', (err, data) => { if (err) { reject(Error('Cannot load the database')); return; } const lines = data.split('\n').filter((line) => line.trim() !== ''); const students = lines.slice(1); const fields = {}; students.forEach((student) => { const parts = student.split(','); const firstname = parts[0]; const field = parts[3]; if (fields[field] === undefined) { fields[field] = []; } fields[field].push(firstname); }); resolve(fields); }); });
-export default readDatabase; export { readDatabase };
+
+const readDatabase = (filePath) => new Promise((resolve, reject) => {
+  fs.readFile(filePath, 'utf8', (error, data) => {
+    if (error) {
+      reject(error);
+      return;
+    }
+
+    const rows = data.split('\n').filter((line) => line.trim() !== '');
+    const students = rows.slice(1);
+    const byField = {};
+
+    students.forEach((student) => {
+      const [firstname, , , field] = student.split(',');
+      if (!byField[field]) {
+        byField[field] = [];
+      }
+      byField[field].push(firstname);
+    });
+
+    resolve(byField);
+  });
+});
+
+export default readDatabase;
