@@ -1,3 +1,13 @@
-const app = require('./7-http_express');
+import express from 'express';
+import router from './routes';
 
-module.exports = app;
+const app = express();
+const port = 1245;
+
+app.use('/', router);
+
+app.listen(port, () => {
+  console.log(`Server listening on port ${port}`);
+});
+
+export default app;
