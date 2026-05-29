@@ -1,60 +1,55 @@
 const http = require('http');
 const fs = require('fs');
 
-const dbPath = process.argv[2];
+function getStudentsReport(path) {
+  return fs.promises.readFile(path, 'utf8')
+    .then((data) => {
+      const rows = data.split('\n').filter((line) => line.trim() !== '');
+      const students = rows.slice(1);
+      const byField = {};
 
-function countStudents(path) {
-  return new Promise((resolve, reject) => {
-    fs.readFile(path, 'utf8', (err, data) => {
-      if (err) return reject(Error('Cannot load the database'));
+      students.forEach((student) => {
+        const [firstname, , , field] = student.split(',');
+          byField[field] = [];
+        }
+        byField[field].push(firstname);
+      });
 
-      // Həm \n, həm də Windows mühitindən gələ biləcək \r\n simvollarını tam təmizləyirik
-      const lines = data.split(/\r?\n/).filter((l) => l.trim() !== '');
-      if (lines.length <= 1) {
-        resolve('Number of students: 0');
-        return;
-      }
-
-      const fields = {};
-      for (let i = 1; i < lines.length; i++) {
-        const parts = lines[i].split(',');
-        if (parts.length < 4) continue;
-        
-        const field = parts[3].trim();
-        const firstname = parts[0].trim();
-
-        fields[field].push(firstname);
-      }
-
-      let output = `Number of students: ${lines.length - 1}`;
-      for (const field of Object.keys(fields).sort()) {
-        output += `\nNumber of students in ${field}: ${fields[field].length}. List: ${fields[field].join(', ')}`;
-      }
-
-      resolve(output);
+      const lines = [`Number of students: ${students.length}`];
+      Object.keys(byField).forEach((field) => {
+        lines.push(`Number of students in ${field}: ${byField[field].length}. List: ${byField[field].join(', ')}`);
+      });
+      return lines.join('\n');
+    })
+    .catch(() => {
+      throw new Error('Cannot load the database');
     });
-  });
 }
 
-const app = http.createServer(async (req, res) => {
+const app = http.createServer((req, res) => {
+  res.statusCode = 200;
+  res.setHeader('Content-Type', 'text/plain');
+
   if (req.url === '/') {
-    res.writeHead(200, { 'Content-Type': 'text/plain' });
     res.end('Hello Holberton School!');
-  } else if (req.url === '/students') {
-    res.writeHead(200, { 'Content-Type': 'text/plain' });
-    
-    try {
-      const data = await countStudents(dbPath);
-      // Başlıq mətni ilə datanı tam birləşdirib tək səfərdə res.end ilə göndəririk
-      res.end(`This is the list of our students\n${data}`);
-    } catch (err) {
-      res.end(`This is the list of our students\n${err.message}`);
-    }
-  } else {
-    res.writeHead(404, { 'Content-Type': 'text/plain' });
-    res.end('Not Found');
+    return;
   }
+
+  if (req.url === '/students') {
+    const dbPath = process.argv[2];
+    getStudentsReport(dbPath)
+      .then((report) => {
+        res.end(`This is the list of our students\n${report}`);
+      })
+      .catch((error) => {
+        res.end(`This is the list of our students\n${error.message}`);
+      });
+    return;
+  }
+
+  res.end('Hello Holberton School!');
 });
 
 app.listen(1245);
+
 module.exports = app;
