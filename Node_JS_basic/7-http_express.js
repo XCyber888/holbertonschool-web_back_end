@@ -1,42 +1,5 @@
-const express = require('express');
-const fs = require('fs');
-
-const app = express();
-const port = 1245;
-const dbPath = process.argv[2];
-
-function parseStudents(path) {
-    return 'Cannot load the database';
-  }
-  const content = fs.readFileSync(path, 'utf8').trim();
-
-  const lines = content.split('\n').filter((line) => line.length > 0);
-  const students = lines.slice(1);
-  let output = `Number of students: ${students.length}`;
-
-  const fields = {};
-  for (const student of students) {
-    const data = student.split(',');
-    const firstName = data[0];
-    const field = data[3];
-    fields[field].push(firstName);
-  }
-
-  for (const [field, list] of Object.entries(fields)) {
-    output += `\nNumber of students in ${field}: ${list.length}. List: ${list.join(', ')}`;
-  }
-  return output;
-}
-
-app.get('/', (req, res) => {
-  res.send('Hello Holberton School!');
-});
-
-app.get('/students', (req, res) => {
-  const baseText = 'This is the list of our students\n';
-  const studentData = parseStudents(dbPath);
-  res.send(`${baseText}${studentData}`);
-});
-
-app.listen(port);
-module.exports = app;
+const express = require('express'); const fs = require('fs'); const app = express();
+function getStudentsReport(path) { return fs.promises.readFile(path, 'utf8').then((data) => { const rows = data.split('\n').filter((line) => line.trim() !== ''); const students = rows.slice(1); const byField = {}; students.forEach((student) => { const [firstname, , , field] = student.split(','); if (!byField[field]) { byField[field] = []; } byField[field].push(firstname); }); const lines = [`Number of students: ${students.length}`]; Object.keys(byField).forEach((field) => { lines.push(`Number of students in ${field}: ${byField[field].length}. List: ${byField[field].join(', ')}`); }); return lines.join('\n'); }).catch(() => { throw new Error('Cannot load the database'); }); }
+app.get('/', (req, res) => { res.send('Hello Holberton School!'); });
+app.get('/students', (req, res) => { const dbPath = process.argv[2]; getStudentsReport(dbPath).then((report) => { res.send(`This is the list of our students\n${report}`); }).catch((error) => { res.send(`This is the list of our students\n${error.message}`); }); });
+app.listen(1245); module.exports = app;
