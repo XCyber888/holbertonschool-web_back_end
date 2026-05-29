@@ -8,25 +8,25 @@ function countStudents(path) {
     fs.readFile(path, 'utf8', (err, data) => {
       if (err) return reject(Error('Cannot load the database'));
 
-      // Boş sətirləri təmizləyirik
-      const lines = data.split('\n').filter((l) => l.trim() !== '');
+      // Həm \n, həm də Windows mühitindən gələ biləcək \r\n simvollarını tam təmizləyirik
+      const lines = data.split(/\r?\n/).filter((l) => l.trim() !== '');
       if (lines.length <= 1) {
         resolve('Number of students: 0');
         return;
       }
 
       const fields = {};
-      // Başlığı ötürərək tələbələri dövr edirik
       for (let i = 1; i < lines.length; i++) {
         const parts = lines[i].split(',');
-        const field = parts[3];
-        const firstname = parts[0];
+        if (parts.length < 4) continue;
+        
+        const field = parts[3].trim();
+        const firstname = parts[0].trim();
 
         fields[field].push(firstname);
       }
 
       let output = `Number of students: ${lines.length - 1}`;
-      // Holberton-un mütləq istədiyi əlifba sırası sıralaması (.sort())
       for (const field of Object.keys(fields).sort()) {
         output += `\nNumber of students in ${field}: ${fields[field].length}. List: ${fields[field].join(', ')}`;
       }
@@ -42,14 +42,13 @@ const app = http.createServer(async (req, res) => {
     res.end('Hello Holberton School!');
   } else if (req.url === '/students') {
     res.writeHead(200, { 'Content-Type': 'text/plain' });
-    res.write('This is the list of our students\n');
-
+    
     try {
-      // Mütləq asinxron gözləmə (await) olmalıdır
       const data = await countStudents(dbPath);
-      res.end(data);
+      // Başlıq mətni ilə datanı tam birləşdirib tək səfərdə res.end ilə göndəririk
+      res.end(`This is the list of our students\n${data}`);
     } catch (err) {
-      res.end(err.message);
+      res.end(`This is the list of our students\n${err.message}`);
     }
   } else {
     res.writeHead(404, { 'Content-Type': 'text/plain' });
